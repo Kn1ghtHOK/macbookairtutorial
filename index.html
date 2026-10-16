@@ -1,0 +1,363 @@
+<title>MacBook Air Trackpad</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+<style>
+/* Layout concept: Apple product-page rhythm. Centered hero with a live trackpad demo, left-aligned gesture grids, one dark band for dragging. */
+:root{
+  --bg:#f5f5f7; --fg:#1d1d1f; --muted:#6e6e73; --card:#ffffff; --line:rgba(0,0,0,.1);
+  --accent:#0071e3; --nav:rgba(245,245,247,.78); --chip:#ececf0;
+  --pad-top:#ececf1; --pad-bot:#dcdce3; --pad-line:rgba(0,0,0,.1); --item:#ffffff;
+  --finger:rgba(0,113,227,.88); --finger-ring:rgba(0,113,227,.22);
+  --band:#1d1d1f; --band-fg:#f5f5f7; --band-muted:#a1a1a6; --band-card:#2c2c2e; --band-chip:#3a3a3c;
+  --band-line:rgba(255,255,255,.14); --band-pad-top:#434348; --band-pad-bot:#343438; --band-item:#5a5a60;
+  --band-accent:#2997ff; --band-finger:rgba(41,151,255,.92); --band-ring:rgba(41,151,255,.28);
+  --font:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text",Inter,"Helvetica Neue",Helvetica,Arial,sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#000000; --fg:#f5f5f7; --muted:#a1a1a6; --card:#1c1c1e; --line:rgba(255,255,255,.14);
+    --accent:#2997ff; --nav:rgba(0,0,0,.72); --chip:#2c2c2e;
+    --pad-top:#3b3b40; --pad-bot:#2d2d31; --pad-line:rgba(255,255,255,.1); --item:#4b4b52;
+    --finger:rgba(41,151,255,.92); --finger-ring:rgba(41,151,255,.28); --band:#141416; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#000000; --fg:#f5f5f7; --muted:#a1a1a6; --card:#1c1c1e; --line:rgba(255,255,255,.14);
+  --accent:#2997ff; --nav:rgba(0,0,0,.72); --chip:#2c2c2e;
+  --pad-top:#3b3b40; --pad-bot:#2d2d31; --pad-line:rgba(255,255,255,.1); --item:#4b4b52;
+  --finger:rgba(41,151,255,.92); --finger-ring:rgba(41,151,255,.28); --band:#141416; color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--font);font-size:17px;line-height:1.47;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--nav);-webkit-backdrop-filter:saturate(180%) blur(20px);backdrop-filter:saturate(180%) blur(20px)}
+.wrap{max-width:1080px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:6px}
+
+/* top bar */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--nav);-webkit-backdrop-filter:saturate(180%) blur(20px);backdrop-filter:saturate(180%) blur(20px);border-bottom:1px solid var(--line)}
+.bar{display:flex;align-items:center;gap:20px;height:48px}
+.brand{font-weight:600;font-size:15px;color:var(--fg);white-space:nowrap}
+.brand:hover{text-decoration:none}
+.brand span{color:var(--muted);font-weight:500}
+.top nav{display:flex;gap:22px;margin-left:auto;overflow-x:auto;scrollbar-width:none;min-width:0}
+.top nav::-webkit-scrollbar{display:none}
+.top nav a{font-size:13px;color:var(--muted);white-space:nowrap}
+.top nav a:hover{color:var(--fg);text-decoration:none}
+
+/* hero */
+.hero{text-align:center;padding-block:clamp(48px,9vw,96px) clamp(32px,6vw,56px)}
+.eyebrow{font-size:15px;font-weight:600;color:var(--accent);letter-spacing:.01em;margin:0 0 10px}
+h1{font-size:clamp(40px,9vw,84px);line-height:1.04;letter-spacing:-.03em;font-weight:700;margin:0;text-wrap:balance}
+h1 em{font-style:normal;color:var(--muted)}
+.lede{font-size:clamp(18px,2.4vw,23px);line-height:1.4;color:var(--muted);max-width:640px;margin:20px auto 0;text-wrap:balance}
+.chassis{max-width:560px;margin:clamp(32px,6vw,52px) auto 0;padding:12px;border-radius:30px;background:var(--card);box-shadow:0 0 0 1px var(--line),0 24px 60px -24px rgba(0,0,0,.28)}
+.chassis .pad{border-radius:20px}
+.cap{display:flex;flex-direction:column;align-items:center;gap:2px;margin:18px 0 0;min-height:52px;transition:opacity .25s}
+.cap b{font-size:19px;font-weight:600;letter-spacing:-.01em}
+.cap span{font-size:14px;color:var(--muted)}
+.cap.fade{opacity:0}
+
+/* trackpad demo */
+.pad{position:relative;width:100%;aspect-ratio:16/10;border-radius:14px;background:linear-gradient(var(--pad-top),var(--pad-bot));box-shadow:inset 0 0 0 1px var(--pad-line);container-type:size;overflow:hidden}
+.f{position:absolute;left:calc(var(--x)*1%);top:calc(var(--y)*1%);width:11cqh;height:11cqh;margin:-5.5cqh 0 0 -5.5cqh;border-radius:50%;background:var(--finger);box-shadow:0 0 0 2cqh var(--finger-ring)}
+.f::after{content:"";position:absolute;inset:0;border-radius:50%;border:.7cqh solid var(--finger);opacity:0}
+.item{position:absolute;left:calc(var(--x)*1%);top:calc(var(--y)*1%);width:calc(var(--w)*1cqw);height:calc(var(--h)*1cqh);margin-left:calc(var(--w)*-.5cqw);margin-top:calc(var(--h)*-.5cqh);border-radius:2cqh;background:var(--item);box-shadow:0 1cqh 3cqh rgba(0,0,0,.18),0 0 0 1px var(--pad-line)}
+.edge{position:absolute;top:10%;bottom:10%;width:1.4cqh;border-radius:99px;background:var(--finger-ring)}
+.edge.right{right:1.6cqh}
+.key{position:absolute;left:3cqh;bottom:3cqh;font:600 6cqh/1 var(--font);letter-spacing:.02em;padding:2.2cqh 3cqh;border-radius:2cqh;background:var(--item);color:var(--muted);box-shadow:0 0 0 1px var(--pad-line)}
+.grp{position:absolute;inset:0;transform-origin:50% 50%}
+
+.pad[data-a=move] .f{animation:mv 2.8s ease-in-out infinite}
+.pad[data-a=move] .item{animation:itemEarly 2.8s ease-in-out infinite}
+.pad[data-a=tap] .f{animation:tap 2.4s ease-out infinite}
+.pad[data-a=dtap] .f{animation:dtap 2.4s ease-out infinite}
+.pad[data-a=press] .f{animation:press 2.4s ease-out infinite}
+.pad[data-a=press] .f::after{animation:ring 2.4s ease-out infinite}
+.pad[data-a=force] .f{animation:force 3s ease-out infinite}
+.pad[data-a=force] .f::after{animation:ring2 3s ease-out infinite}
+.pad[data-a=rot] .grp{animation:rot 2.8s ease-in-out infinite}
+.pad[data-a=rot] .f{animation:fade 2.8s ease-in-out infinite}
+.pad[data-a=tapdrag] .f{animation:tapdrag 3.4s ease-in-out infinite}
+.pad[data-a=tapdrag] .item,.pad[data-a=lock] .item{animation:itemLate 3.4s ease-in-out infinite}
+.pad[data-a=lock] .f{animation:lockf 3.4s ease-in-out infinite}
+.pad.ring .f::after{opacity:.7}
+
+@keyframes mv{0%{opacity:0;transform:translate(0,0) scale(.7)}12%{opacity:1;transform:translate(0,0) scale(1)}62%{opacity:1;transform:translate(calc(var(--dx)*1cqw),calc(var(--dy)*1cqh))}80%,100%{opacity:0;transform:translate(calc(var(--dx)*1cqw),calc(var(--dy)*1cqh)) scale(.8)}}
+@keyframes itemEarly{0%{opacity:0;transform:translate(0,0)}12%{opacity:1;transform:translate(0,0)}62%{opacity:1;transform:translate(calc(var(--dx)*1cqw),calc(var(--dy)*1cqh))}80%,100%{opacity:0;transform:translate(calc(var(--dx)*1cqw),calc(var(--dy)*1cqh))}}
+@keyframes itemLate{0%{opacity:0;transform:translate(0,0)}6%{opacity:1;transform:translate(0,0)}34%{opacity:1;transform:translate(0,0)}88%{opacity:1;transform:translate(calc(var(--dx)*1cqw),calc(var(--dy)*1cqh))}96%,100%{opacity:0;transform:translate(calc(var(--dx)*1cqw),calc(var(--dy)*1cqh))}}
+@keyframes tap{0%{opacity:0;transform:scale(1.5)}18%{opacity:1;transform:scale(1)}30%{opacity:1;transform:scale(.8)}42%{opacity:1;transform:scale(1)}62%,100%{opacity:0;transform:scale(1)}}
+@keyframes dtap{0%{opacity:0;transform:scale(1.5)}10%{opacity:1;transform:scale(1)}18%{transform:scale(.8)}26%{transform:scale(1)}34%{transform:scale(.8)}42%{opacity:1;transform:scale(1)}62%,100%{opacity:0;transform:scale(1)}}
+@keyframes press{0%{opacity:0;transform:scale(1.5)}15%{opacity:1;transform:scale(1)}30%{opacity:1;transform:scale(.78)}55%{opacity:1;transform:scale(.78)}70%{opacity:1;transform:scale(1)}85%,100%{opacity:0;transform:scale(1)}}
+@keyframes ring{0%,28%{opacity:0;transform:scale(1)}32%{opacity:.9;transform:scale(1)}62%{opacity:0;transform:scale(2.4)}100%{opacity:0}}
+@keyframes force{0%{opacity:0;transform:scale(1.5)}12%{opacity:1;transform:scale(1)}28%{opacity:1;transform:scale(.8)}45%{opacity:1;transform:scale(.8)}62%{opacity:1;transform:scale(1.45)}80%{opacity:1;transform:scale(1.45)}92%,100%{opacity:0;transform:scale(1)}}
+@keyframes ring2{0%,28%{opacity:0;transform:scale(1)}31%{opacity:.9}45%{opacity:0;transform:scale(2)}58%{opacity:0;transform:scale(1)}62%{opacity:.9}80%{opacity:0;transform:scale(2.2)}100%{opacity:0}}
+@keyframes rot{0%,12%{transform:rotate(0)}62%,100%{transform:rotate(calc(var(--rot)*1deg))}}
+@keyframes fade{0%{opacity:0}12%{opacity:1}78%{opacity:1}92%,100%{opacity:0}}
+@keyframes tapdrag{0%{opacity:0;transform:translate(0,0) scale(1.4)}8%{opacity:1;transform:translate(0,0) scale(1)}14%{opacity:1;transform:translate(0,0) scale(.8)}20%{opacity:.15;transform:translate(0,0) scale(1)}26%{opacity:1;transform:translate(0,0) scale(.85)}34%{opacity:1;transform:translate(0,0) scale(.9)}74%{opacity:1;transform:translate(calc(var(--dx)*1cqw),calc(var(--dy)*1cqh)) scale(.9)}88%,100%{opacity:0;transform:translate(calc(var(--dx)*1cqw),calc(var(--dy)*1cqh)) scale(1)}}
+@keyframes lockf{0%{opacity:0;transform:translate(0,0) scale(1.4)}8%{opacity:1;transform:translate(0,0) scale(1)}14%{opacity:1;transform:translate(0,0) scale(.8)}20%{opacity:.15;transform:translate(0,0) scale(1)}26%{opacity:1;transform:translate(0,0) scale(.85)}34%{opacity:1;transform:translate(0,0) scale(.9)}58%{opacity:1;transform:translate(calc(var(--dx)*.55cqw),calc(var(--dy)*.55cqh)) scale(.9)}66%,100%{opacity:0;transform:translate(calc(var(--dx)*.55cqw),calc(var(--dy)*.55cqh)) scale(1)}}
+@media (prefers-reduced-motion: reduce){.pad *{animation:none!important}.cap{transition:none}html{scroll-behavior:auto}}
+
+/* filter */
+.finder{padding-block:8px 0}
+.finder h2{margin-bottom:6px}
+.pills{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.pill{font:500 15px/1 var(--font);padding:10px 18px;border-radius:99px;border:0;background:var(--chip);color:var(--fg);cursor:pointer}
+.pill[aria-pressed=true]{background:var(--fg);color:var(--bg)}
+.count{font-size:14px;color:var(--muted);margin:14px 0 0}
+
+/* sections */
+section.block{padding-block:clamp(48px,8vw,84px) 0;scroll-margin-top:60px}
+section.block:last-of-type{padding-bottom:clamp(48px,8vw,84px)}
+h2{font-size:clamp(30px,5vw,50px);line-height:1.08;letter-spacing:-.025em;font-weight:700;margin:0;text-wrap:balance}
+.sub{font-size:clamp(17px,2vw,21px);color:var(--muted);margin:10px 0 0;max-width:620px;text-wrap:pretty}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr));gap:16px;margin-top:32px}
+.card{background:var(--card);border-radius:22px;padding:14px 14px 22px;display:flex;flex-direction:column;gap:14px;min-width:0;box-shadow:0 0 0 1px var(--line)}
+.card .pad{border-radius:12px}
+.card .body{padding:0 8px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.meta{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font-size:12px;font-weight:600;letter-spacing:.02em;padding:4px 10px;border-radius:99px;background:var(--chip);color:var(--muted);white-space:nowrap}
+.chip.on{color:var(--accent)}
+.card h3{font-size:21px;line-height:1.2;letter-spacing:-.015em;font-weight:600;margin:0;text-wrap:balance}
+.card p{margin:0;font-size:15px;line-height:1.45;color:var(--muted)}
+.card .path{font-size:13px;color:var(--fg);opacity:.72}
+
+.band{margin-top:clamp(48px,8vw,84px);padding-block:clamp(48px,8vw,84px);background:var(--band);color:var(--band-fg);
+  --card:var(--band-card);--fg:var(--band-fg);--muted:var(--band-muted);--chip:var(--band-chip);--line:var(--band-line);--accent:var(--band-accent);
+  --pad-top:var(--band-pad-top);--pad-bot:var(--band-pad-bot);--item:var(--band-item);--finger:var(--band-finger);--finger-ring:var(--band-ring);--pad-line:rgba(255,255,255,.1)}
+.band section.block{padding-top:0}
+.band .eyebrow{color:var(--band-accent)}
+
+/* settings */
+.tips{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr));gap:16px;margin-top:32px}
+.tip{background:var(--card);border-radius:22px;padding:24px;box-shadow:0 0 0 1px var(--line);min-width:0}
+.tip h3{margin:0 0 6px;font-size:19px;font-weight:600;letter-spacing:-.01em}
+.tip p{margin:0;font-size:15px;color:var(--muted)}
+.tip code{display:block;margin-top:12px;font:500 13px/1.4 ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--fg);opacity:.75}
+footer{padding-block:32px 56px;font-size:13px;color:var(--muted);border-top:1px solid var(--line)}
+footer p{margin:0;max-width:680px}
+[hidden]{display:none!important}
+</style>
+
+<header class="top" id="top">
+  <div class="wrap bar">
+    <a class="brand" href="#top">MacBook Air <span>Trackpad</span></a>
+    <nav aria-label="Sections">
+      <a href="#point">Point &amp; Click</a>
+      <a href="#scroll">Scroll &amp; Zoom</a>
+      <a href="#drag">Dragging</a>
+      <a href="#more">More Gestures</a>
+      <a href="#settings">Settings</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <div class="wrap hero">
+    <p class="eyebrow">MacBook Air &nbsp;·&nbsp; macOS 27 Golden Gate</p>
+    <h1>Every gesture.<br><em>One trackpad.</em></h1>
+    <p class="lede">The Force Touch trackpad has no moving button. It clicks with haptic feedback and reads pressure and finger count, so one glass surface can do all of this.</p>
+    <div class="chassis" id="demo"></div>
+    <p class="cap" id="cap"><b>&nbsp;</b><span>&nbsp;</span></p>
+  </div>
+
+  <div class="wrap finder">
+    <h2>Find a gesture</h2>
+    <p class="sub">Filter by how many fingers you want to use.</p>
+    <div class="pills" role="group" aria-label="Filter by finger count" id="pills"></div>
+    <p class="count" id="count" aria-live="polite"></p>
+  </div>
+
+  <section class="block" id="point"><div class="wrap">
+    <h2>Point &amp; Click</h2>
+    <p class="sub">Clicking, right-clicking and looking things up.</p>
+    <div class="grid" id="g-point"></div>
+  </div></section>
+
+  <section class="block" id="scroll"><div class="wrap">
+    <h2>Scroll &amp; Zoom</h2>
+    <p class="sub">Two fingers cover most of what you do on a page.</p>
+    <div class="grid" id="g-scroll"></div>
+  </div></section>
+
+  <div class="band">
+    <section class="block" id="drag"><div class="wrap">
+      <p class="eyebrow">Move things</p>
+      <h2>Dragging</h2>
+      <p class="sub">Four ways to pick something up and put it down. Three of them are off until you turn them on.</p>
+      <div class="grid" id="g-drag"></div>
+    </div></section>
+  </div>
+
+  <section class="block" id="more"><div class="wrap">
+    <h2>More Gestures</h2>
+    <p class="sub">Swipes that move between pages, desktops and windows. Three or four fingers is your choice in settings.</p>
+    <div class="grid" id="g-more"></div>
+  </div></section>
+
+  <section class="block" id="settings"><div class="wrap">
+    <h2>Settings worth knowing</h2>
+    <p class="sub">Open System Settings, then Trackpad. Each tab has a short video for every option.</p>
+    <div class="tips">
+      <div class="tip"><h3>Tap to click</h3><p>Tap lightly instead of pressing down. It is off by default.</p><code>Trackpad › Point &amp; Click</code></div>
+      <div class="tip"><h3>Natural scrolling</h3><p>On by default, so the page follows your fingers like a phone. Switch it off for the reverse direction.</p><code>Trackpad › Scroll &amp; Zoom</code></div>
+      <div class="tip"><h3>Secondary click</h3><p>Choose a two-finger click, or click the bottom-right or bottom-left corner.</p><code>Trackpad › Point &amp; Click</code></div>
+      <div class="tip"><h3>Click pressure and Quiet Click</h3><p>Pick Light, Medium or Firm. Quiet Click silences the click sound.</p><code>Trackpad › Point &amp; Click</code></div>
+      <div class="tip"><h3>Tracking speed</h3><p>Slide to control how far the pointer travels for each swipe of your finger.</p><code>Trackpad › Point &amp; Click</code></div>
+      <div class="tip"><h3>Three-finger drag</h3><p>Turn on Use trackpad for dragging, then choose Three Finger Drag. This also controls tap-drag and drag lock.</p><code>Accessibility › Pointer Control › Trackpad Options</code></div>
+      <div class="tip"><h3>Three or four fingers</h3><p>Choose which finger count triggers Mission Control, App Exposé and full-screen app swipes.</p><code>Trackpad › More Gestures</code></div>
+      <div class="tip"><h3>Zoom the screen</h3><p>Turn on the scroll gesture with a modifier key to magnify the display.</p><code>Accessibility › Zoom</code></div>
+    </div>
+  </div></section>
+
+  <footer><div class="wrap">
+    <p>Gestures follow your macOS settings, and menu names shift a little between macOS versions. These apply to any Mac laptop with a Force Touch trackpad. Touch-screen gestures spotted in macOS 27.2 beta code, and touch input on an iPad used with Sidecar, are not trackpad features and are not covered. When in doubt, open System Settings › Trackpad.</p>
+  </div></footer>
+</main>
+
+<script>
+(function(){
+  var row=function(n,cx,cy,g){var a=[];for(var i=0;i<n;i++)a.push([cx+(i-(n-1)/2)*g,cy]);return a};
+  var col=function(n,cx,cy,g){var a=[];for(var i=0;i<n;i++)a.push([cx,cy+(i-(n-1)/2)*g]);return a};
+  var mv=function(p,dx,dy){return p.map(function(q){return{x:q[0],y:q[1],dx:dx,dy:dy}})};
+  var conv=function(outer,c,spread){return outer.map(function(q){
+    var ix=c[0]+(q[0]-c[0])*.3,iy=c[1]+(q[1]-c[1])*.3;
+    var s=spread?[ix,iy]:q,e=spread?q:[ix,iy];
+    return{x:s[0],y:s[1],dx:e[0]-s[0],dy:e[1]-s[1]}})};
+  var sw=function(n,dir){
+    var g=n>2?12:16,gc=n>2?15:18;
+    if(dir==='up')return mv(row(n,50,68,g),0,-36);
+    if(dir==='down')return mv(row(n,50,32,g),0,36);
+    if(dir==='left')return mv(col(n,68,50,gc),-36,0);
+    return mv(col(n,32,50,gc),36,0);
+  };
+  var thumb=[[26,72],[50,28],[64,34],[76,46]];
+  var ON='On by default',OFF='Off by default',SET='Choose in settings';
+
+  var G=[
+   {id:'click',sec:'point',t:'Click',f:[1],fl:'1 finger',tag:ON,a:'press',fingers:[{x:50,y:52,dx:0,dy:0}],
+    d:'Press down anywhere on the trackpad. You feel a click, but nothing moves. Click twice quickly to double-click.',path:'Trackpad › Point & Click'},
+   {id:'tap',sec:'point',t:'Tap to click',f:[1],fl:'1 finger',tag:OFF,a:'tap',fingers:[{x:50,y:52,dx:0,dy:0}],
+    d:'Tap lightly with one finger instead of pressing down. Two quick taps double-click.',path:'Trackpad › Point & Click'},
+   {id:'secondary',sec:'point',t:'Secondary click',f:[2],fl:'2 fingers',tag:ON,a:'press',fingers:mv(row(2,50,52,16),0,0),
+    d:'Right-click. Click with two fingers to open a shortcut menu. You can also click a bottom corner, or hold Control and click.',path:'Trackpad › Point & Click'},
+   {id:'lookup',sec:'point',t:'Look up & data detectors',f:[3],fl:'3 fingers',tag:SET,a:'tap',fingers:mv(row(3,50,52,13),0,0),
+    d:'Tap with three fingers on a word for its definition, or on an address, date or phone number for quick actions. Force Click can do the same job.',path:'Trackpad › Point & Click'},
+   {id:'force',sec:'point',t:'Force Click',f:[1],fl:'1 finger',tag:ON,a:'force',fingers:[{x:50,y:52,dx:0,dy:0}],
+    d:'Click, then press a little harder. It previews links, looks up words, renames files in Finder and opens Quick Look.',path:'Trackpad › Point & Click'},
+
+   {id:'scroll',sec:'scroll',t:'Scroll',f:[2],fl:'2 fingers',tag:ON,a:'move',fingers:sw(2,'up'),
+    d:'Slide two fingers in any direction. With natural scrolling the page follows your fingers. Flick and let go to coast.',path:'Trackpad › Scroll & Zoom'},
+   {id:'pinch',sec:'scroll',t:'Pinch to zoom',f:[2],fl:'2 fingers',tag:ON,a:'move',fingers:conv([[30,70],[70,30]],[50,50],true),
+    d:'Spread two fingers apart to zoom in. Pinch them together to zoom out. Works in Photos, Maps, Safari and Preview.',path:'Trackpad › Scroll & Zoom'},
+   {id:'smart',sec:'scroll',t:'Smart zoom',f:[2],fl:'2 fingers',tag:ON,a:'dtap',fingers:mv(row(2,50,52,16),0,0),
+    d:'Double-tap with two fingers to zoom in on a web page or PDF. Double-tap again to zoom back out.',path:'Trackpad › Scroll & Zoom'},
+   {id:'rotate',sec:'scroll',t:'Rotate',f:[2],fl:'2 fingers',tag:ON,a:'rot',rot:60,fingers:[{x:37,y:50,dx:0,dy:0},{x:63,y:50,dx:0,dy:0}],
+    d:'Twist two fingers around each other to turn a photo, map or shape.',path:'Trackpad › Scroll & Zoom'},
+   {id:'zoomscreen',sec:'scroll',t:'Zoom the whole screen',f:[2],fl:'2 fingers + Control',tag:OFF,a:'move',key:'control',fingers:sw(2,'up'),
+    d:'Hold Control and scroll with two fingers to magnify everything on screen.',path:'Accessibility › Zoom'},
+
+   {id:'clickdrag',sec:'drag',t:'Click and drag',f:[1],fl:'1 finger',tag:ON,a:'move',ring:1,item:{x:30,y:62,dx:38,dy:-22,w:16,h:22},fingers:[{x:30,y:62,dx:38,dy:-22}],
+    d:'Press and hold, then slide to move a file or select text. Lift to drop. You can hold the click with your thumb and slide with another finger.',path:'Always available'},
+   {id:'tapdrag',sec:'drag',t:'Tap-drag',f:[1],fl:'1 finger',tag:OFF,a:'tapdrag',item:{x:30,y:62,dx:40,dy:-24,w:16,h:22},fingers:[{x:30,y:62,dx:40,dy:-24}],
+    d:'Double-tap, but keep your finger down on the second tap, then slide. Lift to drop.',path:'Accessibility › Pointer Control › Trackpad Options'},
+   {id:'draglock',sec:'drag',t:'Drag lock',f:[1],fl:'1 finger',tag:OFF,a:'lock',item:{x:30,y:62,dx:40,dy:-24,w:16,h:22},fingers:[{x:30,y:62,dx:40,dy:-24}],
+    d:'Start the same way, then lift your finger. The item stays picked up so you can reposition your hand. Tap once to drop.',path:'Accessibility › Pointer Control › Trackpad Options'},
+   {id:'tfdrag',sec:'drag',t:'Three-finger drag',f:[3],fl:'3 fingers',tag:OFF,a:'move',item:{x:34,y:56,dx:36,dy:-22,w:30,h:36},fingers:mv(row(3,34,56,9),36,-22),
+    d:'Rest three fingers on a window, file or selection and slide. No clicking needed. Lift to drop.',path:'Accessibility › Pointer Control › Trackpad Options'},
+
+   {id:'refresh',sec:'more',t:'Swipe down to refresh',f:[2],fl:'2 fingers',tag:ON,a:'move',fingers:sw(2,'down'),
+    d:'Swipe down with two fingers to refresh, like pull-to-refresh on iPhone. It works in Safari, Mail, News, Podcasts and Calendar.',path:'No setting needed'},
+   {id:'pages',sec:'more',t:'Swipe between pages',f:[2],fl:'2 fingers',tag:ON,a:'move',fingers:sw(2,'right'),
+    d:'Swipe left or right with two fingers to go back or forward in Safari, Chrome and Photos. Settings let you use three fingers instead.',path:'Trackpad › More Gestures'},
+   {id:'notif',sec:'more',t:'Notification Center',f:[2],fl:'2 fingers',tag:ON,a:'move',edge:'right',fingers:mv(col(2,91,50,18),-46,0),
+    d:'Start at the right edge and swipe left with two fingers to open Notification Center and widgets.',path:'Trackpad › More Gestures'},
+   {id:'mission',sec:'more',t:'Mission Control',f:[3,4],fl:'3 or 4 fingers',tag:SET,a:'move',fingers:sw(3,'up'),
+    d:'Swipe up to see every open window and desktop at once.',path:'Trackpad › More Gestures'},
+   {id:'expose',sec:'more',t:'App Exposé',f:[3,4],fl:'3 or 4 fingers',tag:SET,a:'move',fingers:sw(3,'down'),
+    d:'Swipe down to spread out all the windows of the app you are using.',path:'Trackpad › More Gestures'},
+   {id:'spaces',sec:'more',t:'Full-screen apps and desktops',f:[3,4],fl:'3 or 4 fingers',tag:SET,a:'move',fingers:sw(3,'left'),
+    d:'Swipe left or right to move between desktops and full-screen apps.',path:'Trackpad › More Gestures'},
+   {id:'desktop',sec:'more',t:'Show Desktop',f:[4],fl:'Thumb + 3 fingers',tag:SET,a:'move',fingers:conv(thumb,[52,56],true),
+    d:'Spread your thumb and three fingers apart to push every window aside and reveal the desktop. This is the only thumb-and-fingers gesture left in Trackpad settings.',path:'Trackpad › More Gestures'}
+  ];
+
+  function padHTML(g,extra){
+    var edge=g.edge?'<i class="edge '+g.edge+'"></i>':'';
+    var key=g.key?'<b class="key">'+g.key+'</b>':'';
+    var it=g.item?'<i class="item" style="--x:'+g.item.x+';--y:'+g.item.y+';--dx:'+g.item.dx+';--dy:'+g.item.dy+';--w:'+g.item.w+';--h:'+g.item.h+'"></i>':'';
+    var fs=g.fingers.map(function(p){return '<i class="f" style="--x:'+p.x+';--y:'+p.y+';--dx:'+p.dx+';--dy:'+p.dy+'"></i>'}).join('');
+    var inner=g.a==='rot'?'<div class="grp" style="--rot:'+g.rot+'">'+fs+'</div>':fs;
+    return '<div class="pad'+(g.ring?' ring':'')+'" data-a="'+g.a+'" aria-hidden="true">'+edge+key+it+inner+'</div>';
+  }
+
+  var cards=[];
+  G.forEach(function(g){
+    var host=document.getElementById('g-'+g.sec);
+    var el=document.createElement('article');
+    el.className='card';
+    el.dataset.f=g.f.join(',');
+    var tagCls=g.tag===ON?'chip on':'chip';
+    el.innerHTML=padHTML(g)+'<div class="body"><div class="meta"><span class="chip">'+g.fl+'</span><span class="'+tagCls+'">'+g.tag+'</span></div><h3>'+g.t.replace(/&/g,'&amp;')+'</h3><p>'+g.d+'</p><p class="path">'+g.path.replace(/&/g,'&amp;')+'</p></div>';
+    host.appendChild(el);
+    cards.push(el);
+  });
+
+  /* filter */
+  var pills=document.getElementById('pills'),countEl=document.getElementById('count');
+  var opts=[['all','All'],['1','1 finger'],['2','2 fingers'],['3','3 fingers'],['4','4 fingers']];
+  function applyFilter(n){
+    var shown=0;
+    cards.forEach(function(c){
+      var ok=n==='all'||c.dataset.f.split(',').indexOf(n)>-1;
+      c.hidden=!ok; if(ok)shown++;
+    });
+    ['point','scroll','drag','more'].forEach(function(s){
+      var grid=document.getElementById('g-'+s);
+      var any=Array.prototype.some.call(grid.children,function(c){return !c.hidden});
+      var blk=document.getElementById(s);
+      blk.hidden=!any;
+    });
+    Array.prototype.forEach.call(pills.children,function(b){b.setAttribute('aria-pressed',String(b.dataset.n===n))});
+    countEl.textContent='Showing '+shown+' of '+cards.length+' gestures';
+  }
+  opts.forEach(function(o){
+    var b=document.createElement('button');
+    b.className='pill';b.type='button';b.dataset.n=o[0];b.textContent=o[1];
+    b.addEventListener('click',function(){applyFilter(o[0])});
+    pills.appendChild(b);
+  });
+  applyFilter('all');
+
+  /* hero demo */
+  var byId={};G.forEach(function(g){byId[g.id]=g});
+  var cycle=[
+    ['refresh','Swipe down to refresh','Swipe down with two fingers'],
+    ['scroll','Scroll','Slide two fingers'],
+    ['pinch','Pinch to zoom','Spread or pinch with two fingers'],
+    ['secondary','Secondary click','Click with two fingers'],
+    ['mission','Mission Control','Swipe up with three fingers'],
+    ['tfdrag','Three-finger drag','Slide three fingers to move a window'],
+    ['rotate','Rotate','Twist two fingers'],
+    ['force','Force Click','Click, then press harder']
+  ];
+  var demo=document.getElementById('demo'),cap=document.getElementById('cap'),i=0;
+  function show(){
+    var c=cycle[i];
+    demo.innerHTML=padHTML(byId[c[0]]);
+    cap.innerHTML='<b>'+c[1]+'</b><span>'+c[2]+'</span>';
+  }
+  show();
+  var reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(!reduce){
+    setInterval(function(){
+      cap.classList.add('fade');
+      setTimeout(function(){i=(i+1)%cycle.length;show();cap.classList.remove('fade')},250);
+    },3600);
+  }
+})();
+</script>
